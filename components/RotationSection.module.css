@@ -1,0 +1,259 @@
+.section {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 96px 24px 160px; /* extra bottom padding keeps content clear of the fixed player */
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Reuses the hero's background image. Set --hero-bg-image on a shared
+   ancestor (e.g. body or a wrapper) to the same url() your hero uses, e.g.:
+   :root { --hero-bg-image: url('/rain-bg.jpg'); }
+   Falls back to a plain deep navy if the var isn't set. */
+.bg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image: var(--hero-bg-image, none);
+  background-color: #0a1420;
+  background-size: cover;
+  background-position: center;
+  filter: blur(14px) brightness(0.75) saturate(1.05);
+  transform: scale(1.08); /* avoid blurred edges showing */
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    180deg,
+    rgba(8, 13, 20, 0.45) 0%,
+    rgba(8, 13, 20, 0.65) 60%,
+    #080d14 100%
+  );
+}
+
+/* Signature: thin rain streaks that fall once as the section enters view */
+.rainDivider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  pointer-events: none;
+}
+
+.streak {
+  position: absolute;
+  top: -40px;
+  width: 1px;
+  height: 28px;
+  background: linear-gradient(
+    180deg,
+    rgba(224, 164, 88, 0),
+    rgba(224, 164, 88, 0.55)
+  );
+  opacity: 0;
+}
+
+.streakActive {
+  animation: fall 900ms ease-in forwards;
+}
+
+@keyframes fall {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(72px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .streakActive {
+    animation: none;
+    opacity: 0.4;
+    transform: translateY(30px);
+  }
+}
+
+.panel {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 700ms ease,
+    transform 700ms ease;
+}
+
+.panelIn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e0a458;
+  background: rgba(224, 164, 88, 0.1);
+  border: 1px solid rgba(224, 164, 88, 0.35);
+  flex-shrink: 0;
+}
+
+.wordmark {
+  font-family: "Noto Sans Devanagari", "Baloo 2", sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  color: #f4efe6;
+  line-height: 1;
+}
+
+.eyebrow {
+  margin-top: 4px;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: rgba(244, 239, 230, 0.5);
+}
+
+.description {
+  font-size: 15px;
+  line-height: 1.7;
+  color: rgba(244, 239, 230, 0.82);
+  margin-bottom: 40px;
+  max-width: 54ch;
+}
+
+.rotationsBlock {
+  margin-bottom: 36px;
+}
+
+.rotationsLabel {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: rgba(244, 239, 230, 0.4);
+  margin-bottom: 16px;
+}
+
+.rotationsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 32px;
+}
+
+.rotationsList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rotationsList a {
+  color: #f4efe6;
+  text-decoration: none;
+  font-size: 15px;
+  position: relative;
+  padding-left: 14px;
+}
+
+.rotationsList a::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #e0a458;
+}
+
+.rotationsList a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.badges {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: rgba(244, 239, 230, 0.06);
+  border: 1px solid rgba(244, 239, 230, 0.14);
+  color: #f4efe6;
+  font-size: 13px;
+  text-decoration: none;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.badge:hover {
+  background: rgba(244, 239, 230, 0.1);
+  border-color: rgba(244, 239, 230, 0.24);
+}
+
+.fine {
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: rgba(244, 239, 230, 0.45);
+  max-width: 58ch;
+  margin-bottom: 20px;
+}
+
+.fine a {
+  color: rgba(244, 239, 230, 0.65);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.footer {
+  font-size: 12px;
+  color: rgba(244, 239, 230, 0.35);
+}
+
+@media (max-width: 520px) {
+  .rotationsGrid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .wordmark {
+    font-size: 20px;
+  }
+}

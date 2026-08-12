@@ -1,0 +1,23 @@
+.scene {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.scene::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(5, 8, 14, 0.15) 0%,
+    rgba(5, 8, 14, 0.1) 45%,
+    rgba(5, 8, 14, 0.55) 100%
+  );
+}
+
+.bgimg {
+  object-fit: cover;
+  object-position: center;
+}

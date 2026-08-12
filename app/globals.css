@@ -1,0 +1,32 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  /* height: 100vh; */
+  /* overflow: hidden; */
+  font-family: var(--font-inter), sans-serif;
+  color: #fff;
+  background: #0b1420;
+  /* position: relative; */
+}
+
+main {
+  inset: 0;
+}
+
+.hero {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+:root {
+  --hero-bg-image: url("/door-bg.jpg");
+}

@@ -1,0 +1,235 @@
+.player {
+  position: fixed;
+  left: 50%;
+  bottom: 40px;
+  transform: translateX(-50%);
+  z-index: 3;
+  width: min(760px, 94vw);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.14),
+    rgba(255, 255, 255, 0.05)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  padding: 14px 26px 14px 14px;
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  box-shadow:
+    0 30px 70px -20px rgba(0, 0, 0, 0.65),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.prow {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.art {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex: 0 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: #111;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  font-weight: 700;
+  font-size: 1.08rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+.artist {
+  margin-top: 2px;
+  font-size: 0.86rem;
+  color: rgba(255, 255, 255, 0.8);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ctrls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 0 0 auto;
+}
+
+.ctrls button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  opacity: 0.85;
+}
+
+.ctrls button:hover {
+  opacity: 1;
+}
+
+.ctrls svg {
+  width: 16px;
+  height: 16px;
+}
+
+.playBtn {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #fff !important;
+  opacity: 1;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+.playBtn svg {
+  width: 19px;
+  height: 19px;
+}
+
+.prog {
+  margin-top: 9px;
+}
+
+.track {
+  height: 3px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.28);
+  cursor: pointer;
+}
+
+.fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.times {
+  margin-top: 6px;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+@media (max-width: 600px) {
+  .player {
+    padding: 10px 18px 10px 10px;
+  }
+  .art {
+    width: 60px;
+    height: 60px;
+  }
+  .ctrls {
+    gap: 8px;
+  }
+}
+
+/* Append these to MusicPlayer.module.css */
+
+.shuffleBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  border-radius: 6px;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
+}
+
+.shuffleBtn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.shuffleBtn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.shuffleBtn.active {
+  color: #1db954; /* swap for your accent color */
+}
+
+.volWrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 12px;
+}
+
+.volBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+}
+
+.volBtn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.volSlider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 80px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.2);
+  outline: none;
+  cursor: pointer;
+}
+
+.volSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+}
+
+.volSlider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+  border: none;
+  cursor: pointer;
+}

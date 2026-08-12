@@ -99,10 +99,10 @@ export default function RotationsSection() {
         </div>
 
         <p className={styles.description}>
-          Purani Hindi film gaane, jo sirf barsaat ke mausam mein bajte hain —
-          khidki ke shishe pe paani, aur speaker se seedha 90s ka mood. Kai
-          jagah &ldquo;Barsaat&rdquo; bhi likha milega, par yahan hamesha
-          Baarish hi bajta hai.
+          Old Hindi film songs that only play in the rainy season — raindrops on
+          the window glass, and straight-up 90s mood from the speaker. In many
+          places you'll also find it written as 'Barsaat,' but here it's always
+          Baarish playing.
         </p>
 
         <div className={styles.rotationsBlock}>
@@ -126,7 +126,12 @@ export default function RotationsSection() {
         </div>
 
         <div className={styles.badges}>
-          <a className={styles.badge} href="#" target="_blank" rel="noreferrer">
+          <a
+            className={styles.badge}
+            href="https://open.spotify.com/search/rain%20songs%20bollywood"
+            target="_blank"
+            rel="noreferrer"
+          >
             <svg viewBox="0 0 24 24" width="16" height="16" fill="#1db954">
               <circle cx="12" cy="12" r="12" fill="#1db954" />
               <path
@@ -139,7 +144,12 @@ export default function RotationsSection() {
             </svg>
             Spotify
           </a>
-          <a className={styles.badge} href="#" target="_blank" rel="noreferrer">
+          <a
+            className={styles.badge}
+            href="https://music.youtube.com/search?q=rain+songs+bollywood"
+            target="_blank"
+            rel="noreferrer"
+          >
             <svg viewBox="0 0 24 24" width="16" height="16" fill="#ff0033">
               <circle cx="12" cy="12" r="12" fill="#ff0033" />
               <polygon points="10,8 16,12 10,16" fill="#0b1420" />
@@ -149,9 +159,9 @@ export default function RotationsSection() {
         </div>
 
         <p className={styles.fine}>
-          Gaane YouTube ke embedded player se bajte hain. Yahan kuch bhi host
-          nahi hota — rights hamesha labels, composers aur performers ke paas
-          rehte hain. <br />
+          Songs are played through YouTube's embedded player. Nothing is hosted
+          here — rights always remain with the labels, composers, and
+          performers. <br />
           <br />
           If you hold rights to anything here and want it taken off, email
           anupamk.krishnan@gmail.com and it comes down.

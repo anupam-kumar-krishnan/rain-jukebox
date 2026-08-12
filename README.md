@@ -40,3 +40,7 @@ export const tracks = [
   // ...
 ];
 ```
+
+## Acknowledgements
+
+Inspired by [Yash Bhardwaj's](https://x.com/ybhrdwj) **[Deluxe Salon](https://saloon.wtf/)**

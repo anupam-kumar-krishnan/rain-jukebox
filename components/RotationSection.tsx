@@ -3,19 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./RotationSection.module.css";
 
-type Rotation = { name: string; href: string };
-
-const ROTATIONS_LEFT: Rotation[] = [
-  { name: "Monsoon Mood", href: "#" },
-  { name: "Purani Baarish", href: "#" },
-  { name: "All songs", href: "#" },
-];
-
-const ROTATIONS_RIGHT: Rotation[] = [
-  { name: "Chai Pe Baarish", href: "#" },
-  { name: "Bheegi Shaam", href: "#" },
-];
-
 // Small scroll-reveal hook — fades the panel in once, no scroll-jacking,
 // respects prefers-reduced-motion via the CSS (see .reveal in the module).
 function useInView<T extends HTMLElement>() {
@@ -104,26 +91,6 @@ export default function RotationsSection() {
           places you'll also find it written as 'Barsaat,' but here it's always
           Baarish playing.
         </p>
-
-        <div className={styles.rotationsBlock}>
-          <div className={styles.rotationsLabel}>ROTATIONS</div>
-          <div className={styles.rotationsGrid}>
-            <ul className={styles.rotationsList}>
-              {ROTATIONS_LEFT.map((r) => (
-                <li key={r.name}>
-                  <a href={r.href}>{r.name}</a>
-                </li>
-              ))}
-            </ul>
-            <ul className={styles.rotationsList}>
-              {ROTATIONS_RIGHT.map((r) => (
-                <li key={r.name}>
-                  <a href={r.href}>{r.name}</a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
 
         <div className={styles.badges}>
           <a

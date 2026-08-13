@@ -1,6 +1,6 @@
 # _[Baarish — Jukebox](https://rain-jukebox.vercel.app/)_
 
-![Rain JukeBox Banner](./public/rain-jukebox-banner.png)
+![Rain JukeBox Banner](./public/rain-jukebox-banner.jpg)
 
 A lightweight, embedded music player built with **Next.js** and **TypeScript** that streams audio via the **YouTube IFrame API** — no visible video, just a clean audio-player UI with full playback controls.
 

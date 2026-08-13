@@ -25,10 +25,16 @@ export const metadata: Metadata = {
   description: "A rainy-evening music player",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
-      <body className={`${yatraOne.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
+      <body
+        className={`${yatraOne.variable} ${inter.variable} ${jetbrainsMono.variable}`}
+      >
         {children}
       </body>
     </html>

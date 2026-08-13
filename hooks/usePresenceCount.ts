@@ -4,10 +4,27 @@ import { useEffect, useRef, useState } from "react";
 
 const SESSION_KEY = "baarish_session_id";
 
+function generateId(): string {
+  // crypto.randomUUID requires a secure context (HTTPS or localhost).
+  // Falls back to a simple random ID when testing over LAN IP on HTTP (e.g. phone on dev server).
+  if (
+    typeof crypto !== "undefined" &&
+    typeof crypto.randomUUID === "function"
+  ) {
+    return crypto.randomUUID();
+  }
+  return (
+    "id-" +
+    Date.now().toString(36) +
+    "-" +
+    Math.random().toString(36).slice(2, 10)
+  );
+}
+
 function getSessionId(): string {
   let id = sessionStorage.getItem(SESSION_KEY);
   if (!id) {
-    id = crypto.randomUUID();
+    id = generateId();
     sessionStorage.setItem(SESSION_KEY, id);
   }
   return id;

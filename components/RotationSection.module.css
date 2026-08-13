@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 96px 24px 160px; /* extra bottom padding keeps content clear of the fixed player */
+  padding: 96px 24px 250px; /* extra bottom padding keeps content clear of the fixed player */
   overflow: hidden;
   isolation: isolate;
 }

@@ -18,9 +18,6 @@
   box-shadow:
     0 30px 70px -20px rgba(0, 0, 0, 0.65),
     inset 0 1px 0 rgba(255, 255, 255, 0.25);
-  /* Safety net: nothing (e.g. the volume slider) can visually escape
-     the rounded pill, no matter what width math happens inside. */
-  overflow: hidden;
   box-sizing: border-box;
 }
 
@@ -28,6 +25,10 @@
   display: flex;
   align-items: center;
   gap: 18px;
+  /* Keeps the pill's rounded ends clipping the row content, without
+     clipping the playlist panel above it (that lives outside .prow). */
+  overflow: hidden;
+  border-radius: inherit;
 }
 
 .art {
@@ -39,6 +40,8 @@
   border: 1px solid rgba(255, 255, 255, 0.25);
   background: #111;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  padding: 0;
+  cursor: pointer;
 }
 
 .art img {
@@ -53,6 +56,20 @@
   min-width: 0;
 }
 
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: #fff;
+  cursor: pointer;
+  max-width: 100%;
+  text-align: left;
+}
+
 .title {
   font-weight: 700;
   font-size: 1.08rem;
@@ -60,6 +77,14 @@
   overflow: hidden;
   text-overflow: ellipsis;
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+.chevron {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  opacity: 0.7;
+  transition: transform 0.2s ease;
 }
 
 .artist {
@@ -112,6 +137,15 @@
 .playBtn svg {
   width: 19px;
   height: 19px;
+}
+
+.expandBtn {
+  opacity: 0.7;
+}
+
+.expandBtn svg {
+  width: 16px;
+  height: 16px;
 }
 
 .prog {
@@ -227,6 +261,235 @@
   cursor: pointer;
 }
 
+/* ============================================================
+   Expandable playlist panel
+   ============================================================ */
+
+.playlistPanel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(100% + 12px);
+  max-height: min(420px, 60vh);
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(
+    160deg,
+    rgba(12, 15, 22, 0.97),
+    rgba(12, 15, 22, 0.93)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 26px;
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  box-shadow:
+    0 30px 70px -20px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+  animation: playlistIn 0.16s ease-out;
+}
+
+@keyframes playlistIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.playlistHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.9);
+  flex: 0 0 auto;
+}
+
+.playlistHeaderRight {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.queueBadge {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  white-space: nowrap;
+}
+
+.closeBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+  flex: 0 0 auto;
+}
+
+.closeBtn svg {
+  width: 12px;
+  height: 12px;
+}
+
+.closeBtn:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.playlistList {
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.playlistList::-webkit-scrollbar {
+  width: 6px;
+}
+
+.playlistList::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 3px;
+}
+
+.playlistItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px;
+  border-radius: 12px;
+}
+
+.playlistItem:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.playlistItemActive {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.playlistThumb {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 9px;
+  overflow: hidden;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  flex: 0 0 auto;
+  background: #111;
+}
+
+.playlistThumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.nowPlayingOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nowPlayingOverlay svg {
+  width: 14px;
+  height: 14px;
+}
+
+.playlistMeta {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+}
+
+.playlistTitle {
+  font-size: 0.86rem;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.playlistArtist {
+  font-size: 0.74rem;
+  color: rgba(255, 255, 255, 0.6);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.queueBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+  padding: 0;
+  flex: 0 0 auto;
+  border-radius: 50%;
+}
+
+.queueBtn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.queueBtn svg {
+  width: 15px;
+  height: 15px;
+}
+
+.queuedTag {
+  font-size: 0.66rem;
+  font-weight: 600;
+  color: #1db954;
+  background: rgba(29, 185, 84, 0.14);
+  border: none;
+  border-radius: 999px;
+  padding: 4px 9px;
+  cursor: pointer;
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.queuedTag:hover {
+  background: rgba(29, 185, 84, 0.25);
+}
+
 /* ---------- Tablet / small desktop ---------- */
 @media (max-width: 600px) {
   .player {
@@ -238,6 +501,9 @@
   }
   .ctrls {
     gap: 8px;
+  }
+  .playlistPanel {
+    max-height: min(380px, 55vh);
   }
 }
 
@@ -283,7 +549,7 @@
     order: 3;
     flex: 1 1 100%;
     justify-content: center;
-    gap: 18px;
+    gap: 16px;
   }
 
   .volWrap {
@@ -297,5 +563,33 @@
     flex: 0 1 auto;
     width: 45vw;
     max-width: 160px;
+  }
+
+  .playlistPanel {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    width: 94vw;
+    max-width: 420px;
+    max-height: min(340px, 50vh);
+    border-radius: 24px;
+    bottom: calc(100% + 10px);
+  }
+
+  .playlistHeader {
+    padding: 12px 14px;
+  }
+
+  .playlistThumb {
+    width: 36px;
+    height: 36px;
+  }
+
+  .playlistTitle {
+    font-size: 0.82rem;
+  }
+
+  .playlistArtist {
+    font-size: 0.7rem;
   }
 }

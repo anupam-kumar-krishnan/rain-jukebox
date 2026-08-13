@@ -66,14 +66,21 @@ export default function MusicPlayer({ onPlayStateChange }: Props) {
   const [volume, setVolume] = useState(DEFAULT_VOLUME);
   const [muted, setMuted] = useState(false);
   const [shuffle, setShuffle] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  // "Play next" queue — indices into `tracks`, consumed from the front.
+  const [queue, setQueue] = useState<number[]>([]);
 
   const playerRef = useRef<YTPlayer | null>(null);
   const apiReadyRef = useRef(false);
   const pendingPlayRef = useRef(false);
   const currentRef = useRef(0);
   const shuffleRef = useRef(false);
+  const queueRef = useRef<number[]>([]);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const trackBarRef = useRef<HTMLDivElement>(null);
+  // Wraps the whole pill + expanded panel, used to detect outside clicks
+  // so the panel can auto-collapse.
+  const rootRef = useRef<HTMLDivElement>(null);
   // React owns this wrapper div. The YT Player mounts into a plain child
   // node created imperatively inside it, so React's reconciler never has
   // to remove a DOM node that the YouTube API has already replaced.
@@ -86,6 +93,31 @@ export default function MusicPlayer({ onPlayStateChange }: Props) {
   useEffect(() => {
     shuffleRef.current = shuffle;
   }, [shuffle]);
+
+  useEffect(() => {
+    queueRef.current = queue;
+  }, [queue]);
+
+  // Collapse the expanded playlist on outside click / Escape.
+  useEffect(() => {
+    if (!expanded) return;
+
+    function handlePointerDown(e: globalThis.MouseEvent) {
+      if (rootRef.current && !rootRef.current.contains(e.target as Node)) {
+        setExpanded(false);
+      }
+    }
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") setExpanded(false);
+    }
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [expanded]);
 
   const getNextIndex = useCallback((i: number, useShuffle: boolean) => {
     if (tracks.length <= 1) return i;
@@ -113,6 +145,15 @@ export default function MusicPlayer({ onPlayStateChange }: Props) {
 
   const goNext = useCallback(
     (autoplay: boolean) => {
+      // Anything explicitly queued via "play next" takes priority over
+      // shuffle/sequential order, and is consumed FIFO.
+      if (queueRef.current.length > 0) {
+        const [head, ...rest] = queueRef.current;
+        queueRef.current = rest;
+        setQueue(rest);
+        loadTrack(head, autoplay);
+        return;
+      }
       loadTrack(getNextIndex(currentRef.current, shuffleRef.current), autoplay);
     },
     [getNextIndex, loadTrack],
@@ -262,21 +303,175 @@ export default function MusicPlayer({ onPlayStateChange }: Props) {
     setShuffle((s) => !s);
   }
 
+  function toggleExpanded() {
+    setExpanded((v) => !v);
+  }
+
+  // Plays a track immediately. If it was sitting in the queue, drop it
+  // from there since it's being played directly now.
+  function playTrackNow(i: number) {
+    setQueue((q) => q.filter((idx) => idx !== i));
+    loadTrack(i, true);
+  }
+
+  // Adds a track to the "play next" queue without interrupting playback.
+  function addToQueue(i: number) {
+    setQueue((q) => (q.includes(i) ? q : [...q, i]));
+  }
+
+  function removeFromQueue(i: number) {
+    setQueue((q) => q.filter((idx) => idx !== i));
+  }
+
   const fillPct = progress.dur ? (progress.cur / progress.dur) * 100 : 0;
   const effectiveVolume = muted ? 0 : volume;
 
   return (
-    <div className={styles.player}>
+    <div className={styles.player} ref={rootRef}>
+      {expanded && (
+        <div
+          className={styles.playlistPanel}
+          role="dialog"
+          aria-label="Playlist"
+        >
+          <div className={styles.playlistHeader}>
+            <span>Playlist</span>
+            <div className={styles.playlistHeaderRight}>
+              {queue.length > 0 && (
+                <span className={styles.queueBadge}>{queue.length} queued</span>
+              )}
+              <button
+                className={styles.closeBtn}
+                onClick={() => setExpanded(false)}
+                aria-label="Collapse playlist"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <ul className={styles.playlistList}>
+            {tracks.map((t, i) => {
+              const isActive = i === current;
+              const isQueued = queue.includes(i);
+              return (
+                <li
+                  key={t.id}
+                  className={
+                    isActive
+                      ? `${styles.playlistItem} ${styles.playlistItemActive}`
+                      : styles.playlistItem
+                  }
+                >
+                  <button
+                    className={styles.playlistThumb}
+                    onClick={() => playTrackNow(i)}
+                    aria-label={`Play ${t.title}`}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={thumb(t.id)} alt="" />
+                    {isActive && (
+                      <span className={styles.nowPlayingOverlay}>
+                        {playing ? (
+                          <svg viewBox="0 0 24 24" fill="#fff">
+                            <rect x="6" y="4" width="4" height="16" />
+                            <rect x="14" y="4" width="4" height="16" />
+                          </svg>
+                        ) : (
+                          <svg viewBox="0 0 24 24" fill="#fff">
+                            <polygon points="7,4 20,12 7,20" />
+                          </svg>
+                        )}
+                      </span>
+                    )}
+                  </button>
+
+                  <button
+                    className={styles.playlistMeta}
+                    onClick={() => playTrackNow(i)}
+                  >
+                    <span className={styles.playlistTitle}>{t.title}</span>
+                    <span className={styles.playlistArtist}>{t.artist}</span>
+                  </button>
+
+                  {isQueued ? (
+                    <button
+                      className={styles.queuedTag}
+                      onClick={() => removeFromQueue(i)}
+                      title="Remove from queue"
+                    >
+                      Queued ✕
+                    </button>
+                  ) : (
+                    <button
+                      className={styles.queueBtn}
+                      onClick={() => addToQueue(i)}
+                      aria-label={`Play ${t.title} next`}
+                      title="Play next"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      >
+                        <line x1="12" y1="5" x2="12" y2="19" />
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                      </svg>
+                    </button>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+
       <div className={styles.prow}>
-        <div className={styles.art}>
+        <button
+          className={styles.art}
+          onClick={toggleExpanded}
+          aria-label={expanded ? "Collapse playlist" : "Expand playlist"}
+          aria-expanded={expanded}
+          title={expanded ? "Collapse playlist" : "Show playlist"}
+        >
           {/* Small, external, low-fixed-count thumbnails — a plain <img> avoids
               next/image's remote-domain allowlist config for this demo. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={thumb(track.id)} alt={track.title} />
-        </div>
+        </button>
 
         <div className={styles.meta}>
-          <div className={styles.title}>{track.title}</div>
+          <button
+            className={styles.titleRow}
+            onClick={toggleExpanded}
+            aria-expanded={expanded}
+            aria-label={expanded ? "Collapse playlist" : "Expand playlist"}
+          >
+            <span className={styles.title}>{track.title}</span>
+            <svg
+              className={styles.chevron}
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{ transform: expanded ? "rotate(180deg)" : "none" }}
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
           <div className={styles.artist}>{track.artist}</div>
           <div className={styles.prog}>
             <div className={styles.track} ref={trackBarRef} onClick={seek}>
@@ -346,6 +541,27 @@ export default function MusicPlayer({ onPlayStateChange }: Props) {
           <button onClick={() => goNext(playing)} aria-label="Next track">
             <svg viewBox="0 0 24 24" fill="#fff">
               <path d="M16 6h2v12h-2zM4 6l10 6L4 18z" />
+            </svg>
+          </button>
+
+          <button
+            className={styles.expandBtn}
+            onClick={toggleExpanded}
+            aria-label={expanded ? "Collapse playlist" : "Expand playlist"}
+            aria-expanded={expanded}
+            title={expanded ? "Collapse playlist" : "Show playlist"}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="4" y1="6" x2="20" y2="6" />
+              <line x1="4" y1="12" x2="20" y2="12" />
+              <line x1="4" y1="18" x2="14" y2="18" />
             </svg>
           </button>
         </div>

@@ -12,7 +12,11 @@ A lightweight, embedded music player built with **Next.js** and **TypeScript** t
 - **Volume control** — slider with mute/unmute toggle, remembers your last volume
 - **Auto-advance** — automatically plays the next track when one ends
 - **Track metadata** — title, artist, and thumbnail pulled from a simple track list
+- **Playlist with queue** — browse the full track list, jump to any song, and view what's up next
+- **Rain sound toggle** — turn ambient rain audio on/off independent of the music player
 - **No visible video** — the YouTube player is mounted off-screen; only the audio is used
+
+_![Playlist](./public/jukebox-playlist.jpg)_
 
 ## Tech Stack
 

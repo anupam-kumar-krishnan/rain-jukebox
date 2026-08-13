@@ -1,22 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const RAIN_TARGET_VOLUME = 0.22;
 
-/**
- * Synthesizes a soft ambient rain loop with the Web Audio API (filtered
- * noise — no external audio file to fetch or break). It fades in whenever
- * no song is playing, and fades out the moment a track starts.
- *
- * Browsers block audio playback until a user gesture, so the ambience
- * starts on the visitor's first click anywhere on the page.
- */
 export function useRainAmbience() {
   const audioCtxRef = useRef<AudioContext | null>(null);
   const gainRef = useRef<GainNode | null>(null);
   const startedRef = useRef(false);
   const songPlayingRef = useRef(false);
+  const [enabled, setEnabled] = useState(true);
+  const enabledRef = useRef(true);
 
   const setVolume = useCallback((target: number, fadeSeconds = 1.5) => {
     const ctx = audioCtxRef.current;
@@ -28,10 +22,20 @@ export function useRainAmbience() {
     gain.gain.linearRampToValueAtTime(target, now + fadeSeconds);
   }, []);
 
+  // Recomputes target volume from current song + enabled state
+  const applyVolume = useCallback(() => {
+    if (!startedRef.current) return;
+    const target =
+      enabledRef.current && !songPlayingRef.current ? RAIN_TARGET_VOLUME : 0;
+    setVolume(target);
+  }, [setVolume]);
+
   const init = useCallback(() => {
     if (audioCtxRef.current) return;
     const AudioCtx =
-      window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext: typeof AudioContext })
+        .webkitAudioContext;
     const ctx = new AudioCtx();
     audioCtxRef.current = ctx;
 
@@ -71,8 +75,8 @@ export function useRainAmbience() {
     const ctx = audioCtxRef.current;
     if (ctx?.state === "suspended") ctx.resume();
     startedRef.current = true;
-    if (!songPlayingRef.current) setVolume(RAIN_TARGET_VOLUME);
-  }, [init, setVolume]);
+    applyVolume();
+  }, [init, applyVolume]);
 
   useEffect(() => {
     const handler = () => start();
@@ -84,11 +88,19 @@ export function useRainAmbience() {
   const setSongPlaying = useCallback(
     (isPlaying: boolean) => {
       songPlayingRef.current = isPlaying;
-      if (!startedRef.current) return;
-      setVolume(isPlaying ? 0 : RAIN_TARGET_VOLUME);
+      applyVolume();
     },
-    [setVolume]
+    [applyVolume],
   );
 
-  return { setSongPlaying };
+  const toggleRain = useCallback(() => {
+    setEnabled((prev) => {
+      const next = !prev;
+      enabledRef.current = next;
+      applyVolume();
+      return next;
+    });
+  }, [applyVolume]);
+
+  return { setSongPlaying, rainEnabled: enabled, toggleRain };
 }

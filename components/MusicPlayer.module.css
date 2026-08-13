@@ -18,6 +18,10 @@
   box-shadow:
     0 30px 70px -20px rgba(0, 0, 0, 0.65),
     inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  /* Safety net: nothing (e.g. the volume slider) can visually escape
+     the rounded pill, no matter what width math happens inside. */
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .prow {
@@ -135,21 +139,6 @@
   color: rgba(255, 255, 255, 0.8);
 }
 
-@media (max-width: 600px) {
-  .player {
-    padding: 10px 18px 10px 10px;
-  }
-  .art {
-    width: 60px;
-    height: 60px;
-  }
-  .ctrls {
-    gap: 8px;
-  }
-}
-
-/* Append these to MusicPlayer.module.css */
-
 .shuffleBtn {
   display: flex;
   align-items: center;
@@ -197,6 +186,7 @@
   background: transparent;
   cursor: pointer;
   padding: 0;
+  flex: 0 0 auto;
 }
 
 .volBtn svg {
@@ -213,6 +203,9 @@
   background: rgba(255, 255, 255, 0.2);
   outline: none;
   cursor: pointer;
+  /* prevents the slider from ever forcing its row wider than its parent */
+  min-width: 0;
+  flex: 0 1 80px;
 }
 
 .volSlider::-webkit-slider-thumb {
@@ -232,4 +225,77 @@
   background: #fff;
   border: none;
   cursor: pointer;
+}
+
+/* ---------- Tablet / small desktop ---------- */
+@media (max-width: 600px) {
+  .player {
+    padding: 10px 18px 10px 10px;
+  }
+  .art {
+    width: 60px;
+    height: 60px;
+  }
+  .ctrls {
+    gap: 8px;
+  }
+}
+
+/* ---------- Phone: stack into rows instead of squeezing everything
+   into one line. Row 1: art + title/progress. Row 2: transport
+   controls, centered. Row 3: volume, centered. ---------- */
+@media (max-width: 480px) {
+  .player {
+    width: 94vw;
+    max-width: 420px;
+    border-radius: 30px;
+    padding: 14px 16px;
+  }
+
+  .prow {
+    flex-wrap: wrap;
+    row-gap: 12px;
+    gap: 12px;
+  }
+
+  .art {
+    width: 48px;
+    height: 48px;
+    order: 1;
+  }
+
+  .meta {
+    order: 2;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .title {
+    font-size: 0.95rem;
+  }
+
+  .artist {
+    font-size: 0.78rem;
+  }
+
+  /* Force these onto their own full-width rows, centered */
+  .ctrls {
+    order: 3;
+    flex: 1 1 100%;
+    justify-content: center;
+    gap: 18px;
+  }
+
+  .volWrap {
+    order: 4;
+    flex: 1 1 100%;
+    justify-content: center;
+    margin-left: 0;
+  }
+
+  .volSlider {
+    flex: 0 1 auto;
+    width: 45vw;
+    max-width: 160px;
+  }
 }

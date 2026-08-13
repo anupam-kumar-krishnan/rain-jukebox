@@ -9,13 +9,13 @@ import RotationsSection from "@/components/RotationSection";
 import styles from "./page.module.css";
 
 export default function Home() {
-  const { setSongPlaying } = useRainAmbience();
+  const { setSongPlaying, rainEnabled, toggleRain } = useRainAmbience();
 
   return (
     <main>
       <div className={styles.hero}>
         <RainyBackground />
-        <TopBar />
+        <TopBar rainEnabled={rainEnabled} onToggleRain={toggleRain} />
         <HeroTitle />
       </div>
       <RotationsSection />

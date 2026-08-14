@@ -2,7 +2,7 @@
 
 ![Rain JukeBox Banner](./public/rain-jukebox-banner.jpg)
 
-A cinematic monsoon-themed music experience built with **Next.js** and **TypeScript**, featuring a curated Hindi rain playlist, queue management, shuffle controls, and adaptive rain ambience powered by the YouTube IFrame Player API.
+A cinematic monsoon-themed music experience built with **Next.js** and **TypeScript**, featuring a curated **Hindi rain playlist**, queue management, shuffle controls, and adaptive rain ambience powered by the YouTube IFrame Player API.
 
 ## Features
 

@@ -2,7 +2,7 @@
 
 ![Rain JukeBox Banner](./public/rain-jukebox-banner.jpg)
 
-A lightweight, embedded music player built with **Next.js** and **TypeScript** that streams audio via the **YouTube IFrame API** — no visible video, just a clean audio-player UI with full playback controls.
+A cinematic monsoon-themed music experience built with **Next.js** and **TypeScript**, featuring a curated Hindi rain playlist, queue management, shuffle controls, and adaptive rain ambience powered by the YouTube IFrame Player API.
 
 ## Features
 

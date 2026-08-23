@@ -22,7 +22,6 @@ export function useRainAmbience() {
     gain.gain.linearRampToValueAtTime(target, now + fadeSeconds);
   }, []);
 
-  // Recomputes target volume from current song + enabled state
   const applyVolume = useCallback(() => {
     if (!startedRef.current) return;
     const target =
@@ -39,7 +38,7 @@ export function useRainAmbience() {
     const ctx = new AudioCtx();
     audioCtxRef.current = ctx;
 
-    const duration = 2; // seconds, looped
+    const duration = 2;
     const bufferSize = duration * ctx.sampleRate;
     const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
     const data = buffer.getChannelData(0);

@@ -3,8 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./RotationSection.module.css";
 
-// Small scroll-reveal hook — fades the panel in once, no scroll-jacking,
-// respects prefers-reduced-motion via the CSS (see .reveal in the module).
 function useInView<T extends HTMLElement>() {
   const ref = useRef<T | null>(null);
   const [inView, setInView] = useState(false);
@@ -28,8 +26,6 @@ function useInView<T extends HTMLElement>() {
   return { ref, inView };
 }
 
-// Signature element: a thin row of rain streaks that "falls" once when the
-// section enters view — a small echo of the hero's rain, not a repeat of it.
 function RainDivider({ active }: { active: boolean }) {
   const streaks = [0, 1, 2, 3, 4, 5, 6];
   return (

@@ -11,8 +11,6 @@ import {
 import styles from "./MusicPlayer.module.css";
 import { tracks } from "@/lib/tracks";
 
-// Minimal shape of the YT iframe API we use — the real API has no
-// official types package, so we keep this loose and cast at the edges.
 type YTPlayer = {
   cueVideoById: (id: string) => void;
   loadVideoById: (id: string) => void;
@@ -78,18 +76,13 @@ export default function MusicPlayer({ onPlayStateChange }: Props) {
   const queueRef = useRef<number[]>([]);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const trackBarRef = useRef<HTMLDivElement>(null);
-  // Wraps the whole pill + expanded panel, used to detect outside clicks
-  // so the panel can auto-collapse.
+
   const rootRef = useRef<HTMLDivElement>(null);
-  // React owns this wrapper div. The YT Player mounts into a plain child
-  // node created imperatively inside it, so React's reconciler never has
-  // to remove a DOM node that the YouTube API has already replaced.
+
   const mountRef = useRef<HTMLDivElement>(null);
 
   const track = tracks[current];
 
-  // keep a ref in sync so callbacks registered once (onStateChange) can read
-  // the latest shuffle setting without being recreated
   useEffect(() => {
     shuffleRef.current = shuffle;
   }, [shuffle]);
@@ -98,7 +91,6 @@ export default function MusicPlayer({ onPlayStateChange }: Props) {
     queueRef.current = queue;
   }, [queue]);
 
-  // Collapse the expanded playlist on outside click / Escape.
   useEffect(() => {
     if (!expanded) return;
 
@@ -145,8 +137,6 @@ export default function MusicPlayer({ onPlayStateChange }: Props) {
 
   const goNext = useCallback(
     (autoplay: boolean) => {
-      // Anything explicitly queued via "play next" takes priority over
-      // shuffle/sequential order, and is consumed FIFO.
       if (queueRef.current.length > 0) {
         const [head, ...rest] = queueRef.current;
         queueRef.current = rest;
@@ -176,8 +166,6 @@ export default function MusicPlayer({ onPlayStateChange }: Props) {
     function createPlayer() {
       if (!window.YT || !mountRef.current || cancelled) return;
 
-      // Plain DOM node, created outside React's render output, for the
-      // YT API to take over and eventually replace with an <iframe>.
       const mountEl = document.createElement("div");
       mountRef.current.appendChild(mountEl);
 
@@ -234,13 +222,9 @@ export default function MusicPlayer({ onPlayStateChange }: Props) {
       apiReadyRef.current = false;
       try {
         playerRef.current?.destroy();
-      } catch {
-        // player may already be gone (e.g. API script never finished
-        // loading before unmount) — safe to ignore
-      }
+      } catch {}
       playerRef.current = null;
-      // Clear anything the YT API left behind so a remount (Strict Mode,
-      // fast refresh, etc.) starts from a clean wrapper.
+
       if (mountRef.current) mountRef.current.innerHTML = "";
     };
   }, [goNext, startPoll]);
@@ -307,14 +291,11 @@ export default function MusicPlayer({ onPlayStateChange }: Props) {
     setExpanded((v) => !v);
   }
 
-  // Plays a track immediately. If it was sitting in the queue, drop it
-  // from there since it's being played directly now.
   function playTrackNow(i: number) {
     setQueue((q) => q.filter((idx) => idx !== i));
     loadTrack(i, true);
   }
 
-  // Adds a track to the "play next" queue without interrupting playback.
   function addToQueue(i: number) {
     setQueue((q) => (q.includes(i) ? q : [...q, i]));
   }

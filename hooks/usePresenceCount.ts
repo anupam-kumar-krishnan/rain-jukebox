@@ -5,8 +5,6 @@ import { useEffect, useRef, useState } from "react";
 const SESSION_KEY = "baarish_session_id";
 
 function generateId(): string {
-  // crypto.randomUUID requires a secure context (HTTPS or localhost).
-  // Falls back to a simple random ID when testing over LAN IP on HTTP (e.g. phone on dev server).
   if (
     typeof crypto !== "undefined" &&
     typeof crypto.randomUUID === "function"
@@ -30,11 +28,6 @@ function getSessionId(): string {
   return id;
 }
 
-/**
- * Returns the number of clients currently connected to the app, based on a
- * real heartbeat against /api/presence (see that route's caveats about
- * multi-instance deployments). Returns null until the first response.
- */
 export function usePresenceCount(intervalMs = 10_000): number | null {
   const [count, setCount] = useState<number | null>(null);
   const sessionIdRef = useRef<string>("");
@@ -53,9 +46,7 @@ export function usePresenceCount(intervalMs = 10_000): number | null {
         if (!res.ok) return;
         const data = await res.json();
         if (!cancelled && typeof data.count === "number") setCount(data.count);
-      } catch {
-        // transient network error — keep last known count
-      }
+      } catch {}
     }
 
     heartbeat();

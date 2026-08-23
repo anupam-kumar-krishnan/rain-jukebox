@@ -86,7 +86,7 @@ export default function RotationsSection() {
         </div>
 
         <p className={styles.description}>
-          Old Hindi film songs that only play in the rainy season — raindrops on
+          Old Hindi film songs that only play in the rainy season, raindrops on
           the window glass, and straight-up 90s mood from the speaker. In many
           places you'll also find it written as 'Barsaat,' but here it's always
           Baarish playing.
@@ -127,7 +127,7 @@ export default function RotationsSection() {
 
         <p className={styles.fine}>
           Songs are played through YouTube's embedded player. Nothing is hosted
-          here — rights always remain with the labels, composers, and
+          here, all rights always remain with the labels, composers, and
           performers. <br />
           <br />
           If you hold rights to anything here and want it taken off, email

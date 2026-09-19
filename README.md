@@ -1,4 +1,4 @@
-# _[Baarish — Jukebox](https://rain-jukebox.vercel.app/)_
+# _[Baarish🌧️ — Jukebox](https://rain-jukebox.vercel.app/)_
 
 ![Rain JukeBox Banner](./public/rain-jukebox-banner.jpg)
 
@@ -15,6 +15,7 @@ A cinematic monsoon-themed music experience built with **Next.js** and **TypeScr
 - **Playlist with queue** — browse the full track list, jump to any song, and view what's up next
 - **Rain sound toggle** — turn ambient rain audio on/off independent of the music player
 - **No visible video** — the YouTube player is mounted off-screen; only the audio is used
+- **Live User Count** - shows the live count of people on Baarish enjoying rainy music
 
 _![Playlist](./public/jukebox-playlist.jpg)_
 

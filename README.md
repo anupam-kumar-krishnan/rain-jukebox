@@ -1,4 +1,4 @@
-# _[Baarish🌧️ — Jukebox](https://rain-jukebox.vercel.app/)_
+# _[Baarish🌧️ - Jukebox](https://rain-jukebox.vercel.app/)_
 
 ![Rain JukeBox Banner](./public/rain-jukebox-banner.jpg)
 
@@ -6,15 +6,15 @@ A cinematic monsoon-themed music experience built with **Next.js** and **TypeScr
 
 ## Features
 
-- **Play / Pause / Next / Previous** — standard transport controls
-- **Shuffle mode** — randomized track order, always skips repeats
-- **Seekable progress bar** — click anywhere on the track bar to jump to that point
-- **Volume control** — slider with mute/unmute toggle, remembers your last volume
-- **Auto-advance** — automatically plays the next track when one ends
-- **Track metadata** — title, artist, and thumbnail pulled from a simple track list
-- **Playlist with queue** — browse the full track list, jump to any song, and view what's up next
-- **Rain sound toggle** — turn ambient rain audio on/off independent of the music player
-- **No visible video** — the YouTube player is mounted off-screen; only the audio is used
+- **Play / Pause / Next / Previous** - standard transport controls
+- **Shuffle mode** - randomized track order, always skips repeats
+- **Seekable progress bar** - click anywhere on the track bar to jump to that point
+- **Volume control** - slider with mute/unmute toggle, remembers your last volume
+- **Auto-advance** - automatically plays the next track when one ends
+- **Track metadata** - title, artist, and thumbnail pulled from a simple track list
+- **Playlist with queue** - browse the full track list, jump to any song, and view what's up next
+- **Rain sound toggle** - turn ambient rain audio on/off independent of the music player
+- **No visible video** - the YouTube player is mounted off-screen; only the audio is used
 - **Live User Count** - shows the live count of people on Baarish enjoying rainy music
 
 _![Playlist](./public/jukebox-playlist.jpg)_
